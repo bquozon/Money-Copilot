@@ -7,7 +7,12 @@ authors = [
     { name = "Barthélémy Coquoz", email = "cobarth2@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "openai>=3.31.0",
+    "pydantic>=2.14.1",
+    "python-dotenv>=1.2.4",
+    "typing>=3.10.0.0",
+]
 
 [project.scripts]
 money-copilot = "money_copilot:main"
@@ -18,5 +23,11 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "pyright>=1.1.414",
     "pytest>=9.1.1",
+    "ruff>=0.17.0",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
