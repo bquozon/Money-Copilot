@@ -1,0 +1,9 @@
+CREATE TABLE transactions (
+    id      INTEGER     PRIMARY KEY,
+    iban    TEXT    NOT NULL,
+    booked_at   TEXT    NOT NULL,
+    description   TEXT    NOT NULL,
+    credit_debit_cent   INTEGER     NOT NULL,
+    balance_cent     INTEGER    NOT NULL,
+    valuta_date     TEXT    NOT NULL,
+    UNIQUE(balance_cent, credit_debit_cent, description, booked_at));

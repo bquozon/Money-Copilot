@@ -43,5 +43,8 @@ def run_tool(call: ToolCall) -> str:
 
 @tool
 def add(x: int, y: int):
+    """
+    Adds two numbers together
+    """
     print(f"Tool add was called and returned {x + y} ")
     return x + y
