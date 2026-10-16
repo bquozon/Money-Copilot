@@ -1,15 +1,12 @@
-
 from typing import Protocol
 
-
-
-from money_copilot.agent.types import Message, Response, ToolCall
-
+from money_copilot.agent.types import Message, Response
 
 
 # Interface
 class LLMClient(Protocol):
     def complete(self, messages: list[Message]) -> Response: ...
+
 
 class FakeLLM:
     def complete(self, messages):
@@ -18,5 +15,3 @@ class FakeLLM:
             tool_calls=[],
         )
         return response
-
-
