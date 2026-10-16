@@ -26,7 +26,7 @@ class OpenAIClient:
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         self.model = model
 
-    def complete(self, messages: list[Message]):
+    def complete(self, messages: list[Message]) -> Response:
         input = [{"role": m.role, "content": m.content} for m in messages]
         llm_res = self.client.responses.create(model=self.model, input=input)
         tools = []

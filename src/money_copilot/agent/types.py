@@ -1,6 +1,12 @@
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel
+
+
+class ToolCall(BaseModel):
+    id: str
+    name: str
+    arguments: dict[str, Any]
 
 
 class Usage(BaseModel):
@@ -9,21 +15,13 @@ class Usage(BaseModel):
 
 
 class Message(BaseModel):
-    role: str
-    content: str
-
-
-class ToolCall(BaseModel):
-    tool: str
+    role: Literal["system", "user", "assistant", "tool"]
+    content: str = ""
+    tool_calls: list[ToolCall] = []
+    tool_call_id: str | None = None
 
 
 class Response(BaseModel):
-    text: str
-    tools: list
-    price: float
-
-
-class ToolCall(BaseModel):
-    id: str
-    name: str
-    arguments: dict[str, Any]
+    text: str = ""
+    tools: list[ToolCall] = []
+    price: float = 0.0
