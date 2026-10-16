@@ -1,8 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor
 
 from money_copilot.agent.types import Message
-from money_copilot.llm import FakeLLM, LLMClient, OpenAIClient
-from money_copilot.tools import run_tool
+from money_copilot.llm import FakeLLM, LLMClient
+from money_copilot.openai_client import OpenAIClient
+from money_copilot.tools import SCHEMAS, run_tool
 
 MAX_ITER = 5
 
@@ -14,8 +15,10 @@ def loop(client: LLMClient, input: str, sys_prompt: str = "") -> str:
     msg.append(sys_msg)
     msg.append(usr_msg)
 
-    for _ in range(MAX_ITER):
-        res = client.complete(msg)
+    for i in range(MAX_ITER):
+        res = client.complete(
+            msg, tools=SCHEMAS, tool_choice="required" if i == 0 else "auto"
+        )
         if not res.tools:  # When res.tools is an empty list
             return res.text
 
