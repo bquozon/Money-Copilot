@@ -17,7 +17,6 @@ from money_copilot.finance.queries import (
 TOOLS = {}
 SCHEMAS = []
 DB_PATH = "data/money.db"
-
 PY_TO_JSON = {str: "string", int: "integer", float: "number", bool: "boolean"}
 
 
@@ -102,7 +101,6 @@ def get_monthly_spending(year: int, month: int) -> str:
         return "Error: month value must be between 1 and 12 included"
     with closing(connect(DB_PATH)) as conn:
         cents = monthly_spending(conn, year, month) or 0
-    print(f"{cents / 100:.2f}")
     return f"{cents / 100:.2f}"
 
 

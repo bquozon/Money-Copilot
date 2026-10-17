@@ -1,4 +1,5 @@
 import sqlite3
+from pathlib import Path
 
 SCHEMA = """CREATE TABLE IF NOT EXISTS transactions (
     id      INTEGER     PRIMARY KEY,
@@ -15,6 +16,15 @@ def connect(path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.execute(SCHEMA)
     return conn
+
+
+def delete_db(path: str) -> bool:
+    try:
+        Path(path).unlink()
+        return True
+    except FileNotFoundError:
+        print("Error: the file doesn't exist")
+        return False
 
 
 """

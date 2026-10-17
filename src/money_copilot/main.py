@@ -1,11 +1,22 @@
 from concurrent.futures import ThreadPoolExecutor
 
 from money_copilot.agent.types import Message
+from money_copilot.finance.db import connect
+from money_copilot.finance.importer import import_csv
 from money_copilot.llm import FakeLLM, LLMClient
 from money_copilot.openai_client import OpenAIClient
-from money_copilot.tools import SCHEMAS, run_tool
+from money_copilot.tools import DB_PATH, SCHEMAS, run_tool
 
 MAX_ITER = 5
+
+
+def setup_db(csv_path: str) -> None:
+    conn = connect(DB_PATH)
+    try:
+        added = import_csv(conn, csv_path)
+        print(f"Imported {added} new transactions")
+    finally:
+        conn.close()
 
 
 def loop(
@@ -41,17 +52,19 @@ def loop(
     return f"Error: no final answer after {MAX_ITER} rounds"
 
 
-OPENAI_MODEL = "gpt-5-nano-2025-08-07"
-client = OpenAIClient(OPENAI_MODEL)
+if __name__ == "__main__":
+    setup_db("tests/fixtures/transactions_sample.csv")
+    OPENAI_MODEL = "gpt-5-nano-2025-08-07"
+    client = OpenAIClient(OPENAI_MODEL)
 
-fake_client = FakeLLM()
-print(
-    loop(
-        fake_client,
-        "On what months did I spend the most ?",
-        sys_prompt="You are a finantial assistant. "
-        "You have access to all the transactions via the tools."
-        "Answer questions from the users and advise him on how to manage his/her money using the data.",
-        verbose=False,
+    fake_client = FakeLLM()
+    print(
+        loop(
+            client,
+            "On what months did I spend the most ?",
+            sys_prompt="You are a finantial assistant. "
+            "You have access to all the transactions via the tools."
+            "Answer questions from the users and advise him on how to manage his/her money using the data.",
+            verbose=False,
+        )
     )
-)

@@ -17,6 +17,6 @@ class FakeLLM:
         )
         response = Response(
             text="",
-            tool_calls=[tool_call],
+            tools=[tool_call],
         )
         return response
