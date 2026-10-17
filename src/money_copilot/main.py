@@ -8,7 +8,9 @@ from money_copilot.tools import SCHEMAS, run_tool
 MAX_ITER = 5
 
 
-def loop(client: LLMClient, input: str, sys_prompt: str = "") -> str:
+def loop(
+    client: LLMClient, input: str, sys_prompt: str = "", verbose: bool = False
+) -> str:
     msg = []
     sys_msg = Message(role="system", content=sys_prompt)
     usr_msg = Message(role="user", content=input)
@@ -24,11 +26,17 @@ def loop(client: LLMClient, input: str, sys_prompt: str = "") -> str:
 
         msg.append(Message(role="assistant", content=res.text, tool_calls=res.tools))
 
+        # Debugging lines
+        if verbose:
+            print(res)
+
         with ThreadPoolExecutor() as pool:
             results = list(pool.map(run_tool, res.tools))
         for call, result in zip(res.tools, results):
             new_msg = Message(role="tool", content=result, tool_call_id=call.id)
             msg.append(new_msg)
+            if verbose:
+                print(new_msg)
 
     return f"Error: no final answer after {MAX_ITER} rounds"
 
@@ -37,4 +45,13 @@ OPENAI_MODEL = "gpt-5-nano-2025-08-07"
 client = OpenAIClient(OPENAI_MODEL)
 
 fake_client = FakeLLM()
-print(loop(client, "How are you? What is 2+5?"))
+print(
+    loop(
+        fake_client,
+        "On what months did I spend the most ?",
+        sys_prompt="You are a finantial assistant. "
+        "You have access to all the transactions via the tools."
+        "Answer questions from the users and advise him on how to manage his/her money using the data.",
+        verbose=False,
+    )
+)

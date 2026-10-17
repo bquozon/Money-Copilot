@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from money_copilot.agent.types import Message, Response
+from money_copilot.agent.types import Message, Response, ToolCall
 
 
 # Interface
@@ -9,9 +9,14 @@ class LLMClient(Protocol):
 
 
 class FakeLLM:
-    def complete(self, messages):
+    def complete(self, messages, tools, tool_choice):
+        tool_call = ToolCall(
+            id="c1",
+            name="get_monthly_spending",
+            arguments={"month": 9, "year": 2026},
+        )
         response = Response(
-            text="Hello! This is just an automatic answer for testing purpose",
-            tool_calls=[],
+            text="",
+            tool_calls=[tool_call],
         )
         return response
