@@ -1,6 +1,11 @@
 from money_copilot.finance.db import connect
 from money_copilot.finance.importer import import_csv
-from money_copilot.finance.queries import monthly_income, monthly_spending, top_expenses
+from money_copilot.finance.queries import (
+    monthly_income,
+    monthly_spending,
+    top_expenses,
+    top_incomes,
+)
 
 
 def test_monthly_spending():
@@ -22,5 +27,14 @@ def test_top_expenses():
     res = top_expenses(conn, 2026, 9, 2) == [
         ("2026-09-01", "Rent Wohnbau AG Zürich", 145000),
         ("2026-09-15", "Savings transfer to CH56 0483 5012 3456 7800 9", 50000),
+    ]
+    assert res
+
+
+def test_top_incomes():
+    conn = connect(":memory:")
+    import_csv(conn, "tests/fixtures/transactions_sample.csv")
+    res = top_incomes(conn, 2026, 9, 2) == [
+        ("2026-09-25", "Salary Acme Engineering AG", 585000)
     ]
     assert res
