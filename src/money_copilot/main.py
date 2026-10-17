@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from datetime import date
 
 from money_copilot.agent.types import Message
 from money_copilot.finance.db import connect
@@ -64,7 +65,8 @@ if __name__ == "__main__":
             "On what months did I spend the most ?",
             sys_prompt="You are a finantial assistant. "
             "You have access to all the transactions via the tools."
-            "Answer questions from the users and advise him on how to manage his/her money using the data.",
+            "Answer questions from the users and advise him on how to manage his/her money using the data."
+            f"today is {date.today().isoformat()}",
             verbose=False,
         )
     )

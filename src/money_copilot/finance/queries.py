@@ -2,7 +2,7 @@ import calendar
 from datetime import date
 
 
-def _month_bounds(year: int, month: int) -> (date, date):
+def _month_bounds(year: int, month: int) -> tuple[date, date]:
     _, last_day = calendar.monthrange(year, month)
     return date(year, month, 1), date(year, month, last_day)
 
