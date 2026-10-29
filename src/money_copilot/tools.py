@@ -47,8 +47,8 @@ def run_tool(call: ToolCall) -> str:
         return f"Error: unknown tool '{call.name}'"
     try:
         result = TOOLS[call.name](**call.arguments)
-    except TypeError as e:
-        return f"Error: bad argument: {e}"
+    except Exception as e:  # noqa: BLE001 - surface any tool failure to the model
+        return f"Error: {e}"
     return json.dumps(result)
 
 

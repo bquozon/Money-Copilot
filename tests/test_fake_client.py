@@ -13,4 +13,3 @@ def test_fake_returns_responses():
     assert client.complete(msgs).text == "first"
     assert client.complete(msgs).text == "second"
     assert len(client.calls) == 2
-    
